@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -24,6 +25,8 @@ class UserController extends Controller
 
         $data['password'] = Hash::make($data['password']);
         $user = User::create($data);
+
+        event(new Registered($user));
 
         return response()->json($user);
     }
