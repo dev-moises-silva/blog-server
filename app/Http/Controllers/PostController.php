@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -13,20 +14,32 @@ class PostController extends Controller
         $user = $request->user();
 
         $data = $request->validate([
-            'title' => 'required|string|max_digits:100',
-            'content' => 'required|string|max_digits:900',
+            'content' => 'required|string|max:900',
         ]);
 
         $data['user_id'] = $user->id;
 
         $post = Post::create($data);
 
-        return response()->json($post);
+        return new PostResource($post);
     }
 
     public function index(Request $request)
     {
-        $posts = Post::all();
-        return response()->json($posts);
+        $posts = Post::latest()->get();
+
+        return PostResource::collection($posts);
+    }
+
+    public function delete(Request $request, Post $post)
+    {
+        if ($request->user()->id == $post->user_id)
+        {
+            $post->delete();
+        }
+        else
+        {
+            abort(403, 'You do not have permission to perform this action.');
+        }
     }
 }

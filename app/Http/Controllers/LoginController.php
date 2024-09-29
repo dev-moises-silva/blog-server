@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
     //
-
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
@@ -19,9 +18,18 @@ class LoginController extends Controller
         if(Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return 'success';
+            return response()->json(["message" => "User was loged!"]);
         }
 
-        return 'error';
+        return response()->json(["message" => "Invalid credentials. Please check your email and password."], 401);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json([], 204);
     }
 }

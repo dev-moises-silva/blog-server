@@ -10,11 +10,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('/login', [LoginController::class, 'authenticate']);
-
 Route::controller(UserController::class)->group(function () {
     Route::prefix('/users')->group(function () {
-        Route::post('/', [UserController::class, 'store']);
+        Route::post('/', 'store');
         Route::get('/', 'index');
     });
 });
@@ -24,6 +22,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::prefix('/posts')->group(function () {
             Route::post('/', 'store');
             Route::get('/', 'index');
+            Route::delete('/{post}', 'delete');
         });
     });
 });
