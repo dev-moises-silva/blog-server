@@ -7,8 +7,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/login', [LoginController::class, 'authenticate']);
-Route::post('/logout', [LoginController::class, 'logout']);
+Route::controller(LoginController::class)->group(function () {
+    Route::post('/login', 'authenticate');
+    Route::post('/logout', 'logout');
+});
 
 Route::get('/login', function () {
     return view('welcome');
