@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
-})->middleware('auth:sanctum');
+})->middleware(['auth:sanctum', 'verified']);
 
 Route::controller(UserController::class)->group(function () {
     Route::prefix('/users')->group(function () {
@@ -17,7 +17,7 @@ Route::controller(UserController::class)->group(function () {
     });
 });
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::controller(PostController::class)->group(function () {
         Route::prefix('/posts')->group(function () {
             Route::post('/', 'store');
