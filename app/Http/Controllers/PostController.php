@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\PostCreated;
+use App\Events\PostDeleted;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -41,6 +42,7 @@ class PostController extends Controller
         if ($request->user()->id == $post->user_id)
         {
             $post->delete();
+            broadcast(new PostDeleted($post->id))->toOthers();
         }
         else
         {
