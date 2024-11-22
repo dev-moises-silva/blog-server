@@ -25,7 +25,7 @@ class PostController extends Controller
 
         $post_resource = new PostResource($post);
 
-        PostCreated::dispatch($post_resource);
+        broadcast(new PostCreated($post_resource))->toOthers();
 
         return $post_resource;
     }
